@@ -60,8 +60,8 @@ codon_to_aa_dict = {
 #         'GGU': 'Gly', 'GGC': 'Gly', 'GGA': 'Gly', 'GGG': 'Gly',
 #         }
 aa_to_codon_dict = {}
-for k, v in codon_to_aa_dict.items():
-    aa_to_codon_dict[v] = aa_to_codon_dict.get(v, []) + [k]
+for k, aa in codon_to_aa_dict.items():
+    aa_to_codon_dict[aa] = [k] + aa_to_codon_dict.get(aa, []) 
 
 aa_to_codon_dict.get('L')
 #function codon to amino acid
@@ -75,6 +75,7 @@ def codon_to_aa_mtDNA(codon):
 
 
 def aa_to_codons_mtDNA(aa):
+    #function amino acid to codon
     aa = aa.replace(" ", "")
     aa = aa.capitalize()
     codons = aa_to_codon_dict.get(aa,
