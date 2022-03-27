@@ -75,12 +75,32 @@ def MNV_generator_2variations(base_codon):
     # print(len(single_nt_var_2))
     output['single_nt_var_2']=single_nt_var_2  
     
-    # print([codon_to_aa_mtDNA(s) for s in output.base_codon])
+
+    # amino acids corresponding to each codon type
     output['base_aa'] = [codon_to_aa_mtDNA(s) for s in output.base_codon]
     output['Two_nt_vars_aa']=[codon_to_aa_mtDNA(s) for s in output.Two_nt_vars_codon]
     output['single_nt_var_1_aa'] = [codon_to_aa_mtDNA(s) for s in single_nt_var_1]
     output['single_nt_var_2_aa'] = [codon_to_aa_mtDNA(s) for s in single_nt_var_2]
-
+    
+    # if an amino acid from a single nt change is different from
+    # base, it is nonsynonymous, further if it is different from 
+    # the two_nt_vars_aa (the real aa change) then it is problamatic
+    Problamatic_1 = []
+    for ind in output.index:
+        output.loc[ind,'Problamatic_1'] =\
+        (output.loc[ind,'single_nt_var_1_aa']!=
+         output.loc[ind,'base_aa'] and
+         output.loc[ind,'single_nt_var_1_aa']!=
+         output.loc[ind,'Two_nt_vars_aa']) *1
+        
+        output.loc[ind,'Problamatic_2'] =\
+        (output.loc[ind,'single_nt_var_2_aa']!=
+         output.loc[ind,'base_aa'] and
+         output.loc[ind,'single_nt_var_2_aa']!=
+         output.loc[ind,'Two_nt_vars_aa']) *1
+        
+    output['Problamatic']=output[['Problamatic_1', 'Problamatic_2']].max(axis=1)
+    
     
     return(output)
 
